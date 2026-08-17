@@ -1,0 +1,66 @@
+package entity
+
+import (
+
+	"lionheartguild.dev/kakeibo-api/entity/types"
+)
+
+type Expense struct {
+	ID       string            `json:"id"`
+	Title    *string           `json:"title,omitempty"`
+	Category KakeiboCategories `json:"category"`
+	Month    Month             `json:"month"`
+	Amount   types.USD         `json:"amount"`
+}
+
+type ExpenseInput struct {
+	ID       string            `json:"id"`
+	Month    Month             `json:"month"`
+	Title    *string           `json:"title,omitempty"`
+	Category KakeiboCategories `json:"category"`
+	Amount   types.USD         `json:"amount"`
+}
+
+type MonthlyBudget struct {
+	Month    Month      `json:"month"`
+	Expenses []*Expense `json:"expenses,omitempty"`
+	Budget   types.USD  `json:"budget"`
+}
+
+type MonthlyBudgetInput struct {
+	Month  Month      `json:"month"`
+	Budget types.USD  `json:"budget"`
+	IsOver *bool      `json:"isOver,omitempty"`
+}
+
+type KakeiboCategories string
+
+const (
+	// This is for necessary expenses only; bills.
+	KakeiboCategoriesEssentials KakeiboCategories = "ESSENTIALS"
+	// This is for unecessary expenses; Netflix, video games, dining out, vacation
+	KakeiboCategoriesNonessentials KakeiboCategories = "NONESSENTIALS"
+	// This is for cultural expense; This includes learning opportunities, theatre, muesems, books
+	KakeiboCategoriesCultural KakeiboCategories = "CULTURAL"
+	// unexpected expenses; medical bills, car repairs, etc...
+	KakeiboCategoriesNonanticipated KakeiboCategories = "NONANTICIPATED"
+)
+
+var AllKakeiboCategories = []KakeiboCategories{
+	KakeiboCategoriesEssentials,
+	KakeiboCategoriesNonessentials,
+	KakeiboCategoriesCultural,
+	KakeiboCategoriesNonanticipated,
+}
+
+func (e KakeiboCategories) IsValid() bool {
+	switch e {
+	case KakeiboCategoriesEssentials, KakeiboCategoriesNonessentials, KakeiboCategoriesCultural, KakeiboCategoriesNonanticipated:
+		return true
+	}
+	return false
+}
+
+func (e KakeiboCategories) String() string {
+	return string(e)
+}
